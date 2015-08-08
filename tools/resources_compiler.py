@@ -88,7 +88,7 @@ class ResourceEntry(object):
             '% 16.9e' % self._value[j] \
             for j in xrange(i, min(n_elements, i + 4))))
         f.write(',\n');
-      f.write('};\n')
+      f.write('};\n\n')
     elif self._table.python_type == str:
       value = self._value
       f.write('static %(declaration)s = "%(value)s";\n' % locals())
@@ -102,7 +102,7 @@ class ResourceEntry(object):
                 '%6dUL' % self._value[j] \
             for j in xrange(i, min(n_elements, i + 4))))
         f.write(',\n');
-      f.write('};\n')
+      f.write('};\n\n')
     
 
 class ResourceTable(object):
