@@ -26,11 +26,11 @@
 # Files and directories
 # ------------------------------------------------------------------------------
 
-TOOLCHAIN_PATH ?= /usr/local/arm/
+TOOLCHAIN_PATH ?= /usr/local/arm-4.8.3/
 TOOLCHAIN_BIN  = $(TOOLCHAIN_PATH)bin/
 STM32_PATH     = stmlib/third_party/STM
 
-PGM_SERIAL_PORT = /dev/tty.usbserial-A100S09O
+PGM_SERIAL_PORT = /dev/tty.usbserial-DA016EN0
 PGM_SERIAL_BAUD_RATE = 115200
 PGM_SERIAL_VERIFY = -v
 
@@ -258,7 +258,7 @@ RESOURCE_COMPILER = stmlib/tools/resources_compiler.py
 resources:	$(TARGET)/resources.cc
 
 $(TARGET)/resources.cc:	$(wildcard $(RESOURCES)/*.py)
-		python $(RESOURCE_COMPILER) $(RESOURCES)/resources.py
+	python2.7 $(RESOURCE_COMPILER) $(RESOURCES)/resources.py
 
 
 # ------------------------------------------------------------------------------
@@ -320,13 +320,13 @@ $(COMBO_BIN):  $(TARGET_HEX) $(BOOTLOADER_HEX)
 upload:	$(UPLOAD_COMMAND)
 
 image_serial:
-	python $(STM32LOADER_PATH)stm32loader.py \
+	python2.7 $(STM32LOADER_PATH)stm32loader.py \
 		-p $(PGM_SERIAL_PORT) \
 		-b $(PGM_SERIAL_BAUD_RATE) \
 		-r -l 131072 image.bin
 
 upload_serial: $(TARGET_BIN)
-	python $(STM32LOADER_PATH)stm32loader.py \
+	python2.7 $(STM32LOADER_PATH)stm32loader.py \
 		-p $(PGM_SERIAL_PORT) \
 		-b $(PGM_SERIAL_BAUD_RATE) \
 		-e $(PGM_SERIAL_VERIFY) \
@@ -334,21 +334,21 @@ upload_serial: $(TARGET_BIN)
 		-w $(TARGET_BIN)
 
 upload_serial_no_erase: $(TARGET_BIN)
-	python $(STM32LOADER_PATH)stm32loader.py \
+	python2.7 $(STM32LOADER_PATH)stm32loader.py \
 		-p $(PGM_SERIAL_PORT) \
 		-b $(PGM_SERIAL_BAUD_RATE) $(PGM_SERIAL_VERIFY)\
 		-a $(BASE_ADDRESS) \
 		-w $(TARGET_BIN)
 
 upload_combo_serial: $(COMBO_BIN)
-	python $(STM32LOADER_PATH)stm32loader.py \
+	python2.7 $(STM32LOADER_PATH)stm32loader.py \
 		-p $(PGM_SERIAL_PORT) \
 		-b $(PGM_SERIAL_BAUD_RATE) \
 		-e $(PGM_SERIAL_VERIFY) \
 		-w $(COMBO_BIN)
 
 upload_combo_serial_no_erase: $(COMBO_BIN)
-	python $(STM32LOADER_PATH)stm32loader.py \
+	python2.7 $(STM32LOADER_PATH)stm32loader.py \
 		-p $(PGM_SERIAL_PORT) \
 		-b $(PGM_SERIAL_BAUD_RATE) $(PGM_SERIAL_VERIFY)\
 		-w $(COMBO_BIN)
