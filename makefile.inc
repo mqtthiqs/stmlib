@@ -138,6 +138,7 @@ INCFLAGS       = \
 			$(PROJECT_CONFIGURATION) \
 			-DF_CPU=$(F_CPU) \
 			-DF_CRYSTAL=$(F_CRYSTAL) \
+			-DSAMPLE_RATE=$(SAMPLE_RATE) \
 			-DUSE_STDPERIPH_DRIVER \
 			-D$(SYSCLOCK)=$(F_CPU)
 
@@ -258,6 +259,7 @@ RESOURCE_COMPILER = stmlib/tools/resources_compiler.py
 resources:	$(TARGET)/resources.cc
 
 $(TARGET)/resources.cc:	$(wildcard $(RESOURCES)/*.py)
+	SAMPLE_RATE=$(SAMPLE_RATE) \
 	python2.7 $(RESOURCE_COMPILER) $(RESOURCES)/resources.py
 
 
