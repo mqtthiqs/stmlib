@@ -54,8 +54,17 @@ class Random {
     return static_cast<float>(GetWord()) / 4294967296.0f;
   }
 
+  static inline uint32_t GetGeometric (uint16_t p) {
+    uint16_t one_minus_p = 0x10000 - p; // 1.0 - p
+    uint32_t log_u = nlog2_16(GetWord() >> 16);
+    uint32_t log_p = nlog2_16(one_minus_p);
+    uint32_t res = log_u / log_p;  // divide and floor in one go
+    return res;
+  }
+
  private:
   static uint32_t rng_state_;
+  static uint32_t nlog2_16(uint16_t x);
 
   DISALLOW_COPY_AND_ASSIGN(Random);
 };
