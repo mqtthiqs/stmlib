@@ -27,12 +27,20 @@
 # ------------------------------------------------------------------------------
 
 TOOLCHAIN_PATH ?= /usr/local/arm-4.8.3/
+
+# Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2
+PGM_INTERFACE ?= stlink-v2
+# hla for stlink-v2 ; jtag otherwise
+PGM_INTERFACE_TYPE ?= hla
+
+PGM_SERIAL_PORT ?= /dev/tty.usbserial-DA016EN0
+PGM_SERIAL_BAUD_RATE ?= 115200
+PGM_SERIAL_VERIFY ?= -v
+
+# --- You should not have to modify these --------------------------------------
+
 TOOLCHAIN_BIN  = $(TOOLCHAIN_PATH)bin/
 STM32_PATH     = stmlib/third_party/STM
-
-PGM_SERIAL_PORT = /dev/tty.usbserial-DA016EN0
-PGM_SERIAL_BAUD_RATE = 115200
-PGM_SERIAL_VERIFY = -v
 
 # --- Do not modify anything below this point ----------------------------------
 
@@ -355,61 +363,45 @@ upload_combo_serial_no_erase: $(COMBO_BIN)
 		-b $(PGM_SERIAL_BAUD_RATE) $(PGM_SERIAL_VERIFY)\
 		-w $(COMBO_BIN)
 
-ERASE_JTAG_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
+BASE_JTAG_CMD = openocd \
+			-f $(OPENOCD_SCRIPTS_PATH)interface_$(PGM_INTERFACE).cfg \
+			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY)_$(PGM_INTERFACE_TYPE).cfg \
 			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+
+ERASE_JTAG_CMD = $(BASE_JTAG_CMD) \
 			-f $(OPENOCD_SCRIPTS_PATH)erase_$(FAMILY).cfg \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_CMD = $(BASE_JTAG_CMD) \
 			-f $(OPENOCD_SCRIPTS_PATH)erase_$(FAMILY).cfg \
 			-c "flash write_bank 0 $(TARGET_BIN) 0x0" \
 			-c "verify_image $(TARGET_BIN)" \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_COMBO_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_COMBO_CMD = $(BASE_JTAG_CMD) \
 			-f $(OPENOCD_SCRIPTS_PATH)erase_$(FAMILY).cfg \
 			-c "flash write_bank 0 $(COMBO_BIN) 0x0" \
 			-c "verify_image $(COMBO_BIN)" \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_NO_ERASE_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_NO_ERASE_CMD = $(BASE_JTAG_CMD) \
 			-c "flash write_image erase $(TARGET_BIN) 0x08000000" \
 			-c "verify_image $(TARGET_BIN)" \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_COMBO_NO_ERASE_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_COMBO_NO_ERASE_CMD = $(BASE_JTAG_CMD) \
 			-c "flash write_image erase $(COMBO_BIN) 0x08000000" \
 			-c "verify_image $(COMBO_BIN)" \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_ERASE_FIRST_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_ERASE_FIRST_CMD = $(BASE_JTAG_CMD) \
 			-c "flash erase_address 0x08000000 16384" \
 			-c "reset" \
 			-c "flash write_image erase $(TARGET_BIN) 0x08000000" \
 			-c "verify_image $(TARGET_BIN)" \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
-UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD = openocd \
-			-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-			-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD = $(BASE_JTAG_CMD) \
 			-c "flash erase_address 0x08000000 16384" \
 			-c "reset" \
 			-c "flash write_image erase $(COMBO_BIN) 0x08000000" \
@@ -417,25 +409,19 @@ UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD = openocd \
 			-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
 image_jtag:
-	openocd \
-		-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-		-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-		-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+	$(BASE_JTAG_CMD) \
 		-c "dump_image image.bin 0x08000000 131072" \
 		-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
 image_jtag_1M:
-	openocd \
-		-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-		-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
-		-f $(OPENOCD_SCRIPTS_PATH)prelude_$(FAMILY).cfg \
+	$(BASE_JTAG_CMD) \
 		-c "dump_image image.bin 0x08000000 1048576" \
 		-f $(OPENOCD_SCRIPTS_PATH)postlude.cfg
 
 debug_server: $(TARGET_BIN)
 	openocd \
-		-f $(OPENOCD_SCRIPTS_PATH)interface.cfg \
-		-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY).cfg \
+		-f $(OPENOCD_SCRIPTS_PATH)interface_$(PGM_INTERFACE).cfg \
+		-f $(OPENOCD_SCRIPTS_PATH)stm32$(FAMILY)_$(PGM_INTERFACE_TYPE).cfg \
 		-c "init" \
 		-c "reset" \
 		-c "halt"
@@ -475,8 +461,16 @@ kill_ftdi:
 reload_ftdi:
 	sudo kextload -b com.FTDI.driver.FTDIUSBSerialDriver
 
-.PHONY: upload upload_serial upload_serial_no_erase upload_jtag
-.PHONY: upload_bundle_serial upload_bundle_jtag
+.PHONY: upload
+
+.PHONY: image_serial
+.PHONY: upload_serial upload_serial_no_erase
+.PHONY: upload_combo_serial upload_combo_serial_no_erase
+
+.PHONY: image_jtag image_jtag_1M
 .PHONY: erase_jtag
+.PHONY: upload_jtag upload_jtag_no_erase upload_jtag_erase_first
+.PHONY: upload_combo_jtag upload_combo_jtag_no_erase upload_combo_jtag_erase_first
+
 .PHONY: kill_ftdi reload_ftdi
 .PHONY: debug_client debug_server
