@@ -437,22 +437,22 @@ erase_jtag:
 	$(ERASE_JTAG_CMD)
 
 upload_jtag: $(TARGET_BIN)
-	$(UPLOAD_JTAG_CMD) || $(UPLOAD_JTAG_CMD)
+	$(UPLOAD_JTAG_CMD)
 
 upload_combo_jtag: $(COMBO_BIN)
-	$(UPLOAD_JTAG_COMBO_CMD) || $(UPLOAD_JTAG_COMBO_CMD)
+	$(UPLOAD_JTAG_COMBO_CMD)
 
 upload_jtag_no_erase: $(TARGET_BIN)
-	$(UPLOAD_JTAG_NO_ERASE_CMD) || $(UPLOAD_JTAG_NO_ERASE_CMD)
+	$(UPLOAD_JTAG_NO_ERASE_CMD)
 
 upload_combo_jtag_no_erase: $(COMBO_BIN)
-	$(UPLOAD_JTAG_COMBO_NO_ERASE_CMD) || $(UPLOAD_JTAG_COMBO_NO_ERASE_CMD)
+	$(UPLOAD_JTAG_COMBO_NO_ERASE_CMD)
 
 upload_jtag_erase_first: $(TARGET_BIN)
-	$(UPLOAD_JTAG_ERASE_FIRST_CMD) || $(UPLOAD_JTAG_ERASE_FIRST_CMD)
+	$(UPLOAD_JTAG_ERASE_FIRST_CMD)
 
 upload_combo_jtag_erase_first: $(COMBO_BIN)
-	$(UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD) || $(UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD)
+	$(UPLOAD_JTAG_COMBO_ERASE_FIRST_CMD)
 
 # Phony target for killing the system FTDI driver on OS X.
 kill_ftdi:
