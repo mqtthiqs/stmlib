@@ -29,9 +29,9 @@
 TOOLCHAIN_PATH ?= /usr/local/arm-4.8.3/
 
 # Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2
-PGM_INTERFACE ?= stlink-v2
+PGM_INTERFACE ?= stlink-v2-swd
 # hla for stlink-v2 ; jtag otherwise
-PGM_INTERFACE_TYPE ?= hla
+PGM_INTERFACE_TYPE ?= hla-swd
 
 PGM_SERIAL_PORT ?= /dev/tty.usbserial-DA016EN0
 PGM_SERIAL_BAUD_RATE ?= 115200
@@ -89,9 +89,11 @@ DEP_FILE       = $(BUILD_DIR)depends.mk
 # Platform specific flags
 # ------------------------------------------------------------------------------
 
+MCU ?= STM32F40_41xxx
+
 ifeq ($(FAMILY),f4xx)
 
-MODEL_DEFINE = STM32F40_41xxx -DSTM32F4XX -DARM_MATH_CM4 -D__FPU_PRESENT
+MODEL_DEFINE = $(MCU) -DSTM32F4XX -DARM_MATH_CM4 -D__FPU_PRESENT
 STARTUP_OBJ   = $(BUILD_DIR)startup_stm32f4xx.o
 LINKER_SCRIPT = stmlib/linker_scripts/stm32f4xx_flash$(LD_SUFFIX).ld
 FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F4xx_StdPeriph_Driver
