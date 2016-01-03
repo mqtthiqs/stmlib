@@ -95,7 +95,7 @@ ifeq ($(FAMILY),f4xx)
 
 MODEL_DEFINE = $(MCU) -DSTM32F4XX -DARM_MATH_CM4 -D__FPU_PRESENT
 STARTUP_OBJ   = $(BUILD_DIR)startup_stm32f4xx.o
-LINKER_SCRIPT = stmlib/linker_scripts/stm32f4xx_flash$(LD_SUFFIX).ld
+LINKER_SCRIPT ?= stmlib/linker_scripts/stm32f4xx_flash$(LD_SUFFIX).ld
 FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F4xx_StdPeriph_Driver
 ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb-interwork -funroll-loops
 ARCH_DEFINE = GCC_ARMCM4
@@ -111,7 +111,7 @@ MODEL_DEFINE = STM32F10X_CL
 endif
 
 STARTUP_OBJ   = $(BUILD_DIR)startup_stm32f10x_$(DENSITY).o
-LINKER_SCRIPT = stmlib/linker_scripts/stm32f10x_flash_$(DENSITY)$(LD_SUFFIX).ld
+LINKER_SCRIPT ?= stmlib/linker_scripts/stm32f10x_flash_$(DENSITY)$(LD_SUFFIX).ld
 FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F10x_StdPeriph_Driver
 ARCHFLAGS = -mcpu=cortex-m3 -mthumb -fno-unroll-loops
 ARCH_DEFINE = GCC_ARMCM3
@@ -280,7 +280,7 @@ $(TARGET)/resources.cc:	$(wildcard $(RESOURCES)/*.py)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-$(TARGET_ELF):  $(OBJS)
+$(TARGET_ELF):  $(OBJS) $(LINKER_SCRIPT)
 	$(CC) $(LDFLAGS) -o $(TARGET_ELF) $(OBJS)
 
 $(DEP_FILE):  $(BUILD_DIR) $(DEPS)
