@@ -45,7 +45,7 @@ class Random {
     rng_state_ = rng_state_ * 1664525L + 1013904223L;
     return state();
   }
-  
+
   static inline int16_t GetSample() {
     return static_cast<int16_t>(GetWord() >> 16);
   }
