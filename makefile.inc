@@ -29,9 +29,9 @@
 TOOLCHAIN_PATH ?= /usr/local/arm-4.8.3/
 
 # Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2
-PGM_INTERFACE ?= stlink-v2-swd
+PGM_INTERFACE ?= stlink-v2
 # hla for stlink-v2 ; jtag otherwise
-PGM_INTERFACE_TYPE ?= hla-swd
+PGM_INTERFACE_TYPE ?= hla
 
 PGM_SERIAL_PORT ?= /dev/tty.usbserial-DA016EN0
 PGM_SERIAL_BAUD_RATE ?= 115200

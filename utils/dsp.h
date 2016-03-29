@@ -91,6 +91,24 @@ inline uint16_t Mix(uint16_t a, uint16_t b, uint16_t balance) {
   return (a * (65535 - balance) + b * balance) >> 16;
 }
 
+inline int16_t Interpolate428(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 28];
+  int32_t b = table[(phase >> 28) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 12) & 0xffff) >> 16);
+}
+
+inline int16_t Interpolate626(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 26];
+  int32_t b = table[(phase >> 26) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 10) & 0xffff) >> 16);
+}
+
+inline int16_t Interpolate725(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 25];
+  int32_t b = table[(phase >> 25) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 9) & 0xffff) >> 16);
+}
+
 inline int16_t Interpolate824(const int16_t* table, uint32_t phase) {
   int32_t a = table[phase >> 24];
   int32_t b = table[(phase >> 24) + 1];
@@ -126,6 +144,18 @@ inline int16_t Interpolate1022(const int16_t* table, uint32_t phase) {
   int32_t a = table[phase >> 22];
   int32_t b = table[(phase >> 22) + 1];
   return a + ((b - a) * static_cast<int32_t>((phase >> 6) & 0xffff) >> 16);
+}
+
+inline int16_t Interpolate1121(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 21];
+  int32_t b = table[(phase >> 21) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 5) & 0xffff) >> 16);
+}
+
+inline int16_t Interpolate1220(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 20];
+  int32_t b = table[(phase >> 20) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 4) & 0xffff) >> 16);
 }
 
 inline int16_t Interpolate115(const int16_t* table, uint16_t phase) {
