@@ -83,7 +83,6 @@ COMBO_BIN      = $(BUILD_DIR)$(TARGET)_bootloader_combo.bin
 BOOTLOADER_HEX = $(BUILD_ROOT)$(BOOTLOADER)/$(BOOTLOADER).hex
 TARGET_SIZE    = $(BUILD_DIR)$(TARGET).size
 TARGETS        = $(BUILD_DIR)$(TARGET).*
-DEP_FILE       = $(BUILD_DIR)depends.mk
 
 # ------------------------------------------------------------------------------
 # Platform specific flags
@@ -295,18 +294,14 @@ $(BUILD_DIR):
 $(TARGET_ELF):  $(OBJS) $(LINKER_SCRIPT)
 	$(CC) $(LDFLAGS) -o $(TARGET_ELF) $(OBJS)
 
-$(DEP_FILE):  $(BUILD_DIR) $(DEPS)
-	cat $(DEPS) > $(DEP_FILE)
-
 bin:	$(TARGET_BIN)
 
 hex:	$(TARGET_HEX)
 
 clean:
-	$(REMOVE) $(OBJS) $(TARGETS) $(DEP_FILE) $(DEPS)
+	$(REMOVE) $(OBJS) $(TARGETS) $(DEPS)
 
 depends:  $(DEPS)
-	cat $(DEPS) > $(DEP_FILE)
 
 $(TARGET_SIZE):  $(TARGET_ELF)
 	$(SIZE) $(TARGET_ELF) > $(TARGET_SIZE)
@@ -323,9 +318,6 @@ ramsize: $(TARGET_SIZE)
 disassemble:  build/$(TARGET)/$(TARGET).lss build/$(TARGET)/$(TARGET).top_symbols
 
 .PHONY: all bin clean depends resources
-
-include $(DEP_FILE)
-
 
 # ------------------------------------------------------------------------------
 # Bootloader merging
@@ -493,3 +485,7 @@ reload_ftdi:
 
 .PHONY: kill_ftdi reload_ftdi
 .PHONY: debug_client debug_server
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(DEPS)
+endif
