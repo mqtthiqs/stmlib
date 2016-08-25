@@ -26,11 +26,11 @@
 # Files and directories
 # ------------------------------------------------------------------------------
 
-TOOLCHAIN_PATH ?= /usr/local/gcc-arm-none-eabi-5_2-2015q4/
+TOOLCHAIN_PATH ?= /usr/local/gcc-arm-none-eabi-5_3-2016q1/
 
-# Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2
+# Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2, stlink-v2-1
 PGM_INTERFACE ?= stlink-v2
-# hla for stlink-v2 ; jtag otherwise
+# hla for stlink-v2+jtag; hla-swd for stlink-v2+swd; jtag otherwise
 PGM_INTERFACE_TYPE ?= hla
 
 PGM_SERIAL_PORT ?= /dev/tty.usbserial-DA016EN0
