@@ -111,6 +111,15 @@ FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F37x_StdPeriph_Driver
 ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb-interwork -funroll-loops
 ARCH_DEFINE = GCC_ARMCM4
 
+else ifeq ($(FAMILY),f30x)
+
+MODEL_DEFINE = STM32F30X -DARM_MATH_CM4 -D__FPU_PRESENT
+STARTUP_OBJ   = $(BUILD_DIR)startup_stm32f30x.o
+LINKER_SCRIPT = stmlib/linker_scripts/stm32f373x_flash$(LD_SUFFIX).ld
+FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F30x_StdPeriph_Driver
+ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb-interwork -funroll-loops
+ARCH_DEFINE = GCC_ARMCM4
+
 else
 
 ifeq ($(DENSITY),hd)
