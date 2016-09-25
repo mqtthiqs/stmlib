@@ -26,18 +26,40 @@
 //
 // Observer pattern.
 
-template <typename Data>
-class IObserver {
+class Observable0 {
+private:
+  typedef void (*ObserverFct)();
+  ObserverFct observer_;
+
 public:
-  virtual void update(Data data) = 0;
+  void notify() {
+    observer_();
+  }
+  void set_observer(ObserverFct observer) { observer_ = observer; }
 };
 
 template <typename Data>
-class Observable {
+class Observable1 {
 private:
-  IObserver<Data>* observer_;
+  typedef void (*ObserverFct)(Data);
+  ObserverFct observer_;
 
 public:
-  void notify(Data data) { observer_->update(data); }
-  void set_observer(IObserver<Data>* observer) { observer_ = observer; }
+  void notify(Data data) {
+    observer_(data);
+  }
+  void set_observer(ObserverFct observer) { observer_ = observer; }
+};
+
+template <typename Data1, typename Data2>
+class Observable2 {
+private:
+  typedef void (*ObserverFct)(Data1, Data2);
+  ObserverFct observer_;
+
+public:
+  void notify(Data1 data1, Data2 data2) {
+    observer_(data1, data2);
+  }
+  void set_observer(ObserverFct observer) { observer_ = observer; }
 };
