@@ -26,11 +26,11 @@
 # Files and directories
 # ------------------------------------------------------------------------------
 
-TOOLCHAIN_PATH ?= /usr/local/gcc-arm-none-eabi-5_2-2015q4/
+TOOLCHAIN_PATH ?= /usr/local/gcc-arm-none-eabi-5_3-2016q1/
 
-# Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2
-PGM_INTERFACE ?= stlink-v2
-# hla for stlink-v2 ; jtag otherwise
+# Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2, stlink-v2-1
+PGM_INTERFACE ?= stlink-v2-1
+# hla for stlink-v2+jtag; hla-swd for stlink-v2+swd; jtag otherwise
 PGM_INTERFACE_TYPE ?= hla
 
 PGM_SERIAL_PORT ?= /dev/tty.usbserial-DA016EN0
@@ -110,6 +110,15 @@ FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F37x_StdPeriph_Driver
 ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb-interwork -funroll-loops
 ARCH_DEFINE = GCC_ARMCM4
 
+else ifeq ($(FAMILY),f30x)
+
+MODEL_DEFINE = STM32F30X -DARM_MATH_CM4 -D__FPU_PRESENT
+STARTUP_OBJ   = $(BUILD_DIR)startup_stm32f30x.o
+LINKER_SCRIPT = stmlib/linker_scripts/stm32f373x_flash$(LD_SUFFIX).ld
+FW_STDDRIVER_DIR = $(STM32_PATH)/STM32F30x_StdPeriph_Driver
+ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb-interwork -funroll-loops
+ARCH_DEFINE = GCC_ARMCM4
+
 else
 
 ifeq ($(DENSITY),hd)
@@ -163,7 +172,7 @@ INCFLAGS       = \
 			-D$(SYSCLOCK)=$(F_CPU)
 
 CCFLAGS         = \
-                        -g -O2 -Wall -Werror \
+			-g -O2 -Wall -Werror \
                         -Wno-unused-local-typedefs \
                         -fasm \
                         -finline \
