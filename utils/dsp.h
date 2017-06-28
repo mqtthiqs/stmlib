@@ -49,7 +49,13 @@ inline uint16_t Interpolate88(const uint16_t* table, uint16_t index)
 inline int16_t Interpolate88(const int16_t* table, uint16_t index)
   __attribute__((always_inline));
 
+inline int16_t Interpolate923(const int16_t* table, uint32_t phase)
+  __attribute__((always_inline));
+
 inline int16_t Interpolate1022(const int16_t* table, uint32_t phase)
+  __attribute__((always_inline));
+
+inline int16_t Interpolate1121(const int16_t* table, uint32_t phase)
   __attribute__((always_inline));
 
 inline int16_t Interpolate115(const int16_t* table, uint16_t phase)
@@ -63,6 +69,13 @@ inline int16_t Crossfade(
   __attribute__((always_inline));
 
 inline int16_t Crossfade(
+    const uint8_t* table_a,
+    const uint8_t* table_b,
+    uint32_t phase,
+    uint16_t balance)
+  __attribute__((always_inline));
+
+inline int16_t Crossfade923(
     const uint8_t* table_a,
     const uint8_t* table_b,
     uint32_t phase,
@@ -140,6 +153,12 @@ inline int16_t Interpolate88(const int16_t* table, uint16_t index) {
   return a + ((b - a) * static_cast<int32_t>(index & 0xff) >> 8);
 }
 
+inline int16_t Interpolate923(const int16_t* table, uint32_t phase) {
+  int32_t a = table[phase >> 23];
+  int32_t b = table[(phase >> 23) + 1];
+  return a + ((b - a) * static_cast<int32_t>((phase >> 7) & 0xffff) >> 16);
+}
+
 inline int16_t Interpolate1022(const int16_t* table, uint32_t phase) {
   int32_t a = table[phase >> 22];
   int32_t b = table[(phase >> 22) + 1];
@@ -156,6 +175,12 @@ inline int16_t Interpolate1220(const int16_t* table, uint32_t phase) {
   int32_t a = table[phase >> 20];
   int32_t b = table[(phase >> 20) + 1];
   return a + ((b - a) * static_cast<int32_t>((phase >> 4) & 0xffff) >> 16);
+}
+
+inline int16_t Interpolate106(const int16_t* table, uint16_t phase) {
+  int32_t a = table[phase >> 6];
+  int32_t b = table[(phase >> 6) + 1];
+  return a + ((b - a) * static_cast<int32_t>(phase & 0b11111) >> 5);
 }
 
 inline int16_t Interpolate115(const int16_t* table, uint16_t phase) {
@@ -194,6 +219,26 @@ inline int16_t Crossfade1022(
   return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
 }
 
+inline int16_t Crossfade1121(
+    const int16_t* table_a,
+    const int16_t* table_b,
+    uint32_t phase,
+    uint16_t balance) {
+  int32_t a = Interpolate1121(table_a, phase);
+  int32_t b = Interpolate1121(table_b, phase);
+  return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
+}
+
+inline int16_t Crossfade923(
+    const int16_t* table_a,
+    const int16_t* table_b,
+    uint32_t phase,
+    uint16_t balance) {
+  int32_t a = Interpolate923(table_a, phase);
+  int32_t b = Interpolate923(table_b, phase);
+  return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
+}
+
 inline int16_t Crossfade115(
     const int16_t* table_a,
     const int16_t* table_b,
@@ -201,6 +246,16 @@ inline int16_t Crossfade115(
     uint16_t balance) {
   int32_t a = Interpolate115(table_a, phase);
   int32_t b = Interpolate115(table_b, phase);
+  return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
+}
+
+inline int16_t Crossfade106(
+    const int16_t* table_a,
+    const int16_t* table_b,
+    uint16_t phase,
+    uint16_t balance) {
+  int32_t a = Interpolate106(table_a, phase);
+  int32_t b = Interpolate106(table_b, phase);
   return a + ((b - a) * static_cast<int32_t>(balance) >> 16);
 }
 
