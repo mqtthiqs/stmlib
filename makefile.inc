@@ -172,7 +172,7 @@ INCFLAGS       = \
 			-D$(SYSCLOCK)=$(F_CPU)
 
 CCFLAGS         = \
-			-g -O2 -Wall -Werror \
+                        -g -O2 -Wall -Werror \
                         -Wno-unused-local-typedefs \
                         -fasm \
                         -finline \
@@ -184,7 +184,9 @@ CCFLAGS         = \
                         $(INCFLAGS) \
 			$(ARCHFLAGS)
 
-CPPFLAGS      = -fno-exceptions -fno-rtti
+CPPFLAGS      = -std=c++11 \
+                -fno-exceptions \
+                -fno-rtti
 
 ASFLAGS       = $(ARCHFLAGS)
 
