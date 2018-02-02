@@ -136,7 +136,7 @@ inline float SoftClip(float x) {
 #endif
 
 inline int16_t SoftConvert(float x) {
-  return Clip16(static_cast<int32_t>(SoftLimit(x * 0.5f) * 32768.0f));
+  return Clip16(static_cast<int32_t>(SoftLimit(x) * 32768.0f));
 }
 
 }  // namespace stmlib
