@@ -32,6 +32,7 @@
 
 #include "stmlib/stmlib.h"
 
+#define M_PI 3.14159265358979323846
 #include <cmath>
 
 namespace stmlib {
@@ -68,7 +69,12 @@ class DCBlocker {
     y_ = 0.0f;
     pole_ = pole;
   }
-  
+
+  float Process(float in) {
+    Process(&in, 1);
+    return in;
+  }
+
   inline void Process(float* in_out, size_t size) {
     float x = x_;
     float y = y_;

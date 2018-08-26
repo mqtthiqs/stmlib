@@ -173,8 +173,8 @@ INCFLAGS       = \
 
 CCFLAGS         = \
                         -g -O2 -Wall -Werror \
-                        -Wno-error=misleading-indentation \
-                        -Wno-unused-local-typedefs \
+			-Wno-error=misleading-indentation \
+			-Wno-unused-local-typedefs \
                         -fasm \
                         -finline \
                         -finline-functions \
@@ -185,7 +185,9 @@ CCFLAGS         = \
                         $(INCFLAGS) \
 			$(ARCHFLAGS)
 
-CPPFLAGS      = -fno-exceptions -fno-rtti
+CPPFLAGS      = -std=c++11 \
+                -fno-exceptions \
+                -fno-rtti
 
 ASFLAGS       = $(ARCHFLAGS)
 
