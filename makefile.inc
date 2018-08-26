@@ -26,7 +26,7 @@
 # Files and directories
 # ------------------------------------------------------------------------------
 
-TOOLCHAIN_PATH ?= /usr/local/gcc-arm-none-eabi-5_4-2016q3/
+TOOLCHAIN_PATH ?= /usr/local/
 
 # Supported: arm-usb-ocd, arm-usb-ocd-h, arm-usb-tiny-h, stlink-v2, stlink-v2-1
 PGM_INTERFACE ?= stlink-v2-1
@@ -172,7 +172,8 @@ INCFLAGS       = \
 			-D$(SYSCLOCK)=$(F_CPU)
 
 CCFLAGS         = \
-			-g -O2 -Wall -Werror \
+                        -g -O2 -Wall -Werror \
+                        -Wno-error=misleading-indentation \
                         -Wno-unused-local-typedefs \
                         -fasm \
                         -finline \
